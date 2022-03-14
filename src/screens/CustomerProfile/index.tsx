@@ -19,6 +19,7 @@ import { COPPER, COPPER_GREY } from '../../styles/colors';
 import CompaniDate from '../../core/helpers/dates/companiDates';
 import Users from '../../api/Users';
 import { AUXILIARY, PLANNING_REFERENT } from '../../core/data/constants';
+import PopUpTest from '../../components/PopUpTest';
 
 type CustomerProfileProp = {
   route: { params: { customerId: string } },
@@ -119,6 +120,8 @@ const CustomerProfile = ({ route }: CustomerProfileProp) => {
     navigation.goBack();
   };
 
+  const triggerPopUp = () => <PopUpTest />;
+
   const onSave = async () => {
     try {
       setLoading(true);
@@ -135,6 +138,7 @@ const CustomerProfile = ({ route }: CustomerProfileProp) => {
       setApiErrorMessage('Une erreur s\'est produite, si le problème persiste, contactez le support technique.');
     } finally {
       setLoading(false);
+      triggerPopUp();
     }
   };
 
@@ -204,6 +208,7 @@ const CustomerProfile = ({ route }: CustomerProfileProp) => {
               <NiInput style={styles.input} caption="Autres" value={editedCustomer?.followUp?.misc}
                 multiline onChangeText={onChangeFollowUpText('misc')} />
             </View>
+            <PopUpTest />
             <ConfirmationModal onPressConfirmButton={onConfirmExit} onPressCancelButton={() => setExitModal(false)}
               visible={exitModal} contentText="Voulez-vous supprimer les modifications apportées ?"
               cancelText="Poursuivre les modifications" confirmText="Supprimer" />
