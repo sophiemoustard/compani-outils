@@ -1,15 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Animated, useWindowDimensions } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { FIRA_SANS_MEDIUM } from '../../styles/fonts';
 import { WHITE } from '../../styles/colors';
 import { BORDER_RADIUS, PADDING } from '../../styles/metrics';
 
-const PopUpTest = () => {
+interface PopUpTestProps {
+  trigger: boolean,
+}
+const PopUpTest = ({ trigger }: PopUpTestProps) => {
   const windowHeight = useWindowDimensions().height;
   const translation = useRef(new Animated.Value(windowHeight)).current;
 
-  const pop = () => {
+  const pop = useCallback(() => {
     Animated.sequence([
       Animated.timing(translation, {
         toValue: 0,
@@ -23,9 +26,9 @@ const PopUpTest = () => {
         useNativeDriver: true,
       }),
     ]).start();
-  };
+  }, [translation, windowHeight]);
 
-  useEffect(() => pop());
+  useEffect(() => { if (trigger) pop(); }, [pop, trigger]);
 
   return (
     <Animated.View style={[styles.container, { transform: [{ translateY: translation }] }]}>

@@ -55,6 +55,7 @@ const CustomerProfile = ({ route }: CustomerProfileProp) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [customerBirth, setCustomerBirth] = useState<string>('');
   const [activeAuxiliaries, setActiveAuxiliaries] = useState<FormattedUserType[]>([]);
+  const [triggerPopUp, setTriggerPopUp] = useState<boolean>(false);
 
   useEffect(() => {
     const birthDate = initialCustomer?.identity?.birthDate
@@ -120,8 +121,6 @@ const CustomerProfile = ({ route }: CustomerProfileProp) => {
     navigation.goBack();
   };
 
-  const triggerPopUp = () => <PopUpTest />;
-
   const onSave = async () => {
     try {
       setLoading(true);
@@ -133,16 +132,19 @@ const CustomerProfile = ({ route }: CustomerProfileProp) => {
 
       await Customers.updateById(customerId, payload);
       setInitialCustomer(editedCustomer);
+      setTriggerPopUp(true);
     } catch (e) {
       console.error(e);
       setApiErrorMessage('Une erreur s\'est produite, si le problème persiste, contactez le support technique.');
     } finally {
       setLoading(false);
-      triggerPopUp();
     }
   };
 
-  useEffect(() => setApiErrorMessage(''), [setApiErrorMessage, editedCustomer]);
+  useEffect(() => {
+    setApiErrorMessage('');
+    setTriggerPopUp(false);
+  }, [setApiErrorMessage, editedCustomer]);
 
   const onChangeFollowUpText = (key: string) => (text: string) => {
     setEditedCustomer({ ...editedCustomer, followUp: { ...editedCustomer.followUp, [key]: text } });
@@ -208,11 +210,11 @@ const CustomerProfile = ({ route }: CustomerProfileProp) => {
               <NiInput style={styles.input} caption="Autres" value={editedCustomer?.followUp?.misc}
                 multiline onChangeText={onChangeFollowUpText('misc')} />
             </View>
-            <PopUpTest />
             <ConfirmationModal onPressConfirmButton={onConfirmExit} onPressCancelButton={() => setExitModal(false)}
               visible={exitModal} contentText="Voulez-vous supprimer les modifications apportées ?"
               cancelText="Poursuivre les modifications" confirmText="Supprimer" />
             <ErrorMessage message={apiErrorMessage || ''} />
+            <PopUpTest trigger={triggerPopUp} />
           </ScrollView>}
       </KeyboardAwareScrollView>
     </>
