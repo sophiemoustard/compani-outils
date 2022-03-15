@@ -3,12 +3,12 @@ import { StyleSheet, Text, View, Animated, useWindowDimensions } from 'react-nat
 import { Feather } from '@expo/vector-icons';
 import { FIRA_SANS_MEDIUM } from '../../styles/fonts';
 import { WHITE } from '../../styles/colors';
-import { BORDER_RADIUS, PADDING } from '../../styles/metrics';
+import { BORDER_RADIUS, MARGIN, PADDING, SCREEN_HEIGHT } from '../../styles/metrics';
 
 interface PopUpTestProps {
-  trigger: boolean,
+  onFinish: () => void,
 }
-const PopUpTest = ({ trigger }: PopUpTestProps) => {
+const PopUpTest = ({ onFinish }: PopUpTestProps) => {
   const windowHeight = useWindowDimensions().height;
   const translation = useRef(new Animated.Value(windowHeight)).current;
 
@@ -25,10 +25,10 @@ const PopUpTest = ({ trigger }: PopUpTestProps) => {
         duration: 2500,
         useNativeDriver: true,
       }),
-    ]).start();
-  }, [translation, windowHeight]);
+    ]).start(() => onFinish());
+  }, [onFinish, translation, windowHeight]);
 
-  useEffect(() => { if (trigger) pop(); }, [pop, trigger]);
+  useEffect(() => { pop(); }, [pop]);
 
   return (
     <Animated.View style={[styles.container, { transform: [{ translateY: translation }] }]}>
@@ -44,14 +44,18 @@ const PopUpTest = ({ trigger }: PopUpTestProps) => {
 
 export default PopUpTest;
 
+const POP_UP_HEIGHT = 60;
+
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: PADDING.MD,
-    height: 60,
+    height: POP_UP_HEIGHT,
     backgroundColor: '#38A169',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
+    position: 'absolute',
+    top: SCREEN_HEIGHT - POP_UP_HEIGHT * 2 - MARGIN.MD,
   },
   content: {
     width: '90%',

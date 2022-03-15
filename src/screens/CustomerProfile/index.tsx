@@ -214,7 +214,7 @@ const CustomerProfile = ({ route }: CustomerProfileProp) => {
               visible={exitModal} contentText="Voulez-vous supprimer les modifications apportées ?"
               cancelText="Poursuivre les modifications" confirmText="Supprimer" />
             <ErrorMessage message={apiErrorMessage || ''} />
-            <PopUpTest trigger={triggerPopUp} />
+            {triggerPopUp && <PopUpTest onFinish={() => setTriggerPopUp(false)} />}
           </ScrollView>}
       </KeyboardAwareScrollView>
     </>
