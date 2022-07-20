@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { WHITE } from '../../styles/colors';
 import { FIRA_SANS_MEDIUM } from '../../styles/fonts';
 import { BORDER_RADIUS, MARGIN, PADDING, SCREEN_HEIGHT } from '../../styles/metrics';
@@ -8,7 +8,8 @@ type ToastMessageStyleProps = {
 };
 
 const TOAST_MESSAGE_HEIGHT = 56;
-const TOAST_OFFSET = TOAST_MESSAGE_HEIGHT + MARGIN.MD;
+const iosOffset = Platform.OS === 'ios' ? 20 : 0;
+const TOAST_OFFSET = TOAST_MESSAGE_HEIGHT + MARGIN.MD + iosOffset;
 const TOAST_POSITION = SCREEN_HEIGHT - TOAST_OFFSET;
 
 const styles = ({ backgroundColor } : ToastMessageStyleProps) => StyleSheet.create({
