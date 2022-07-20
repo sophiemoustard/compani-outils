@@ -250,9 +250,10 @@ const CustomerProfile = ({ route }: CustomerProfileProp) => {
               visible={exitModal} contentText="Voulez-vous supprimer les modifications apportées ?"
               cancelText="Poursuivre les modifications" confirmText="Supprimer" />
             {error.value && <NiErrorMessage message={error.message} />}
-            {triggerToastMessage && <ToastMessage onFinish={() => setTriggerToastMessage(false)} success={success} />}
           </ScrollView>}
       </KeyboardAwareScrollView>
+      {triggerToastMessage && <ToastMessage onFinish={(finished: boolean) => setTriggerToastMessage(!finished)}
+        success={success} />}
     </>
   );
 };

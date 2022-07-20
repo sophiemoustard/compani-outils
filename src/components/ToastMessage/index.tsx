@@ -1,16 +1,15 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { Text, View, Animated, useWindowDimensions } from 'react-native';
+import { Text, View, Animated } from 'react-native';
 import { Feather, AntDesign } from '@expo/vector-icons';
 import { WHITE, GREEN, ORANGE } from '../../styles/colors';
-import styles from './styles';
+import styles, { TOAST_OFFSET } from './styles';
 
 interface ToastMessageProps {
   success: boolean,
-  onFinish: () => void,
+  onFinish: (finished: boolean) => void,
 }
 const ToastMessage = ({ onFinish, success }: ToastMessageProps) => {
-  const windowHeight = useWindowDimensions().height;
-  const translation = useRef(new Animated.Value(windowHeight)).current;
+  const translation = useRef(new Animated.Value(TOAST_OFFSET)).current;
   const style = styles({ backgroundColor: success ? GREEN[600] : ORANGE[600] });
 
   const pop = useCallback(() => {
@@ -21,13 +20,13 @@ const ToastMessage = ({ onFinish, success }: ToastMessageProps) => {
         useNativeDriver: true,
       }),
       Animated.timing(translation, {
-        toValue: windowHeight,
+        toValue: TOAST_OFFSET,
         delay: 2500,
         duration: 1200,
         useNativeDriver: true,
       }),
-    ]).start(() => onFinish());
-  }, [onFinish, translation, windowHeight]);
+    ]).start(({ finished }) => onFinish(finished));
+  }, [onFinish, translation]);
 
   useEffect(() => { pop(); }, [pop]);
 
